@@ -1,0 +1,61 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator typegraphql {
+  provider        = "typegraphql-prisma"
+  output          = "../prisma/generated/type-graphql"
+  useSimpleInputs = true
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id String @id @default(uuid())
+  fullName String
+  userType UserType @default(COMMON)
+  email String @unique
+  password String
+  document String @unique
+  docuementType DocumentType @default(CPF)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Wallets Wallet[]
+}
+
+enum DocumentType {
+  CNPJ
+  CPF
+}
+
+enum UserType{
+  MERCHANT
+  COMMON
+}
+
+model Wallet {
+  id         Int      @id @default(autoincrement())
+  ownerId    String
+  owner      User     @relation(fields: [ownerId], references: [id])
+  balance    Float    @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  transactionsSent      walletTransaction[] @relation("PayerTransaction")
+  transactionsReceived  walletTransaction[] @relation("PayeeTransaction")
+}
+
+model walletTransaction {
+  id        Int      @id @default(autoincrement())
+  payee     Wallet   @relation("PayeeTransaction", fields: [payeeId], references: [id])
+  payer     Wallet   @relation("PayerTransaction", fields: [payerId], references: [id])
+  value     Float
+  payeeId   Int
+  payerId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,0 +1,14 @@
+export { AggregateWalletTransactionArgs } from "./AggregateWalletTransactionArgs";
+export { CreateManyWalletTransactionArgs } from "./CreateManyWalletTransactionArgs";
+export { CreateOneWalletTransactionArgs } from "./CreateOneWalletTransactionArgs";
+export { DeleteManyWalletTransactionArgs } from "./DeleteManyWalletTransactionArgs";
+export { DeleteOneWalletTransactionArgs } from "./DeleteOneWalletTransactionArgs";
+export { FindFirstWalletTransactionArgs } from "./FindFirstWalletTransactionArgs";
+export { FindFirstWalletTransactionOrThrowArgs } from "./FindFirstWalletTransactionOrThrowArgs";
+export { FindManyWalletTransactionArgs } from "./FindManyWalletTransactionArgs";
+export { FindUniqueWalletTransactionArgs } from "./FindUniqueWalletTransactionArgs";
+export { FindUniqueWalletTransactionOrThrowArgs } from "./FindUniqueWalletTransactionOrThrowArgs";
+export { GroupByWalletTransactionArgs } from "./GroupByWalletTransactionArgs";
+export { UpdateManyWalletTransactionArgs } from "./UpdateManyWalletTransactionArgs";
+export { UpdateOneWalletTransactionArgs } from "./UpdateOneWalletTransactionArgs";
+export { UpsertOneWalletTransactionArgs } from "./UpsertOneWalletTransactionArgs";

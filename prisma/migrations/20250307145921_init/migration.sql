@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `user` MODIFY `userType` ENUM('MERCHANT', 'COMMON') NOT NULL DEFAULT 'COMMON',
+    MODIFY `docuementType` ENUM('CNPJ', 'CPF') NOT NULL DEFAULT 'CPF';
