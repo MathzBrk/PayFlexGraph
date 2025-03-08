@@ -2,11 +2,10 @@ import { PrismaClient } from "@prisma/client";
 import { IWalletRepository } from "./interface/wallet-repository-interface";
 import { CreateWalletInput } from "../dtos/input/create-wallet-input";
 import {CreateDepositInput} from "../dtos/input/create-deposit-input";
-import {GetWalletByIdInput} from  "../dtos/input/get-wallet-by-id"
 import {Wallet} from "../dtos/model/wallet";
 
 export class WalletRepository implements IWalletRepository{
-    private prisma = new PrismaClient();
+    constructor(private prisma: PrismaClient){}
 
     async createWallet(data: CreateWalletInput): Promise<Wallet> {
         return await this.prisma.wallet.create({

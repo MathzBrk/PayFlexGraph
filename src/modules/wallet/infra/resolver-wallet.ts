@@ -26,17 +26,13 @@ export class WalletResolver{
     }
 
     @Query(() => Boolean)
-    async getById(@Arg('data') data: number): Promise<boolean>{
+    async getById(@Arg('data') data: number): Promise<boolean> {
 
         const wallet: Wallet | null = await this.repository.walletExists(data);
 
-        if(wallet === null){
-            false;
-        }
-
-        return true;
+        return wallet !== null;
         
-    }
+}
 
 
     @Query(() => [Wallet])
@@ -46,17 +42,21 @@ export class WalletResolver{
     }
 
 
-    @Mutation(()=> Wallet)
-    async deposit(
-        @Arg('data') data:CreateDepositInput):Promise<Wallet>{
+    @Mutation(() => Wallet)
+    async deposit(@Arg('data') data: CreateDepositInput): Promise<Wallet> {
 
-            const walletExists: boolean = await this.getById(data.id) ? true : false;
+        const walletExists: boolean = await this.getById(data.id);
 
-            walletExists ? console.log("Wallet exists") : new Error("Wallet does not exist");
-
-            return await this.repository.deposit(data)
-            
+        if (!walletExists) {
+            throw new Error("Wallet does not exist");
         }
+
+        if (data.balance <= 0) {
+            throw new Error("Deposit amount must be greater than zero");
+        }
+
+        return await this.repository.deposit(data);
+}
     
     
 }

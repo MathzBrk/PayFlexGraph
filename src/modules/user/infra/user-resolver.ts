@@ -1,39 +1,36 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import {User} from "../dtos/model/user";
 import { CreateUserInput } from "../dtos/input/create-user-input";
 import { DocumentType, Prisma, PrismaClient, UserType } from "@prisma/client";
 import { IUserRepository } from "../repository/interface/user-repository-interface";
 import { determineDocument } from "../service/document-service";
 import { UserRepository } from "../repository/user-repository";
+import { UserValidationMiddleware } from "../../middlewares/user-validation-middleware";
+import { MyContext } from "../../middlewares/interfaces/context";
 
 
 @Resolver(() => User)
+@UseMiddleware(UserValidationMiddleware)
 export class UserResolver {
 
-    private repository: IUserRepository;
-
-    constructor(){
-        this.repository = new UserRepository();
-    }
-
     @Mutation(() => User)
-    async createUser(@Arg('data') data: CreateUserInput): Promise<User> {
-        
+    async createUser(@Arg('data') data: CreateUserInput, @Ctx() context: MyContext): Promise<User> {
+
         const document: DocumentType = determineDocument(data.document);
 
         const userType: UserType = document === DocumentType.CPF ? UserType.COMMON : UserType.MERCHANT;
 
-        return await this.repository.createUser(data, userType, document);
+        return await context.userRepository.createUser(data, userType, document);
     }
 
     @Mutation(() => Boolean)
-    async deleteUser(@Arg('id') id: string): Promise<boolean> {
+    async deleteUser(@Arg('id') id: string, @Ctx() context: MyContext): Promise<boolean> {
         if (!id) {
             throw new Error("Id is empty!");
         }
 
         try {
-            const user: User | null = await this.repository.deleteUser(id);
+            const user: User | null = await context.userRepository.deleteUser(id);
             
             if (!user) {
                 throw new Error("User not found!");
@@ -49,8 +46,8 @@ export class UserResolver {
     }
 
     @Query(() => [User])
-    async getUsers(): Promise<User[]> {
-        const users: User[] = await this.repository.getUsers();
+    async getUsers(@Ctx() context: MyContext): Promise<User[]> {
+        const users: User[] = await context.userRepository.getUsers();
         return users;
     }
 

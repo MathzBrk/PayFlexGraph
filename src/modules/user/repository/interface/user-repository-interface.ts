@@ -6,4 +6,6 @@ export interface IUserRepository{
     createUser(user: CreateUserInput, userType: UserType, docType: DocumentType): Promise<User>;
     getUsers(): Promise<User[]>;
     deleteUser(id: string): Promise<User>;
+    getUserByEmail(email: string): Promise<User | null>;
+    getUserByDocuemnt(document: string): Promise<User | null>;
 }

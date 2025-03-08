@@ -2,14 +2,18 @@ import { IsNotEmpty } from "class-validator";
 import { Field, InputType } from "type-graphql";
 
 @InputType()
-export class CreateDepositInput {
+export class CreateTransactionInput {
     
     @Field()
     @IsNotEmpty()
-    id: number;
+    payeeId: number;
     
     @Field()
     @IsNotEmpty()
-    balance:number
+    payerId:number
+
+    @Field()
+    @IsNotEmpty()
+    value:number
     
 }
